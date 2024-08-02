@@ -689,7 +689,7 @@
                 // return this.array
                 const cleanedData = this.array.map(item => ({
                   ...item,
-                  text: item.text.replace(/[\r\n]+/g, '')
+                  text: item.text.replace(/[\r\n]+/g, '').trim()
                 }));
                 return cleanedData;
             }
