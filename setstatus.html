@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set Status Spin</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .custom-control-input:checked~.custom-control-label::before {
+      background-color: #007bff;
+    }
+
+    .custom-control-label::before {
+      width: 2rem;
+      height: 1rem;
+      border-radius: 1rem;
+      transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    }
+
+    .custom-control-label::after {
+      top: 0.25rem;
+      left: 0.25rem;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background-color: white;
+      transition: transform 0.15s ease-in-out;
+    }
+
+    .custom-control-input:checked~.custom-control-label::after {
+      transform: translateX(1rem);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <form id="dataForm">
+      <div class="form-group">
+        <label for="dataSpin">Data personil, jika data lebih dari satu orang, pisahkan dengan
+          <strong>"enter"</strong></label>
+        <textarea class="form-control" id="dataSpin" name="dataSpin" rows="4"></textarea>
+      </div>
+      <div class="custom-control custom-switch">
+        <input type="checkbox" class="custom-control-input" id="statusSpin">
+        <label class="custom-control-label" for="statusSpin">Klik untuk <strong>"on"</strong> pemenang (biru tanda
+          on)</label>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDcEhBiqc73T7nNj2INHmpjEL1ou0gjC3o",
+      authDomain: "spinapp-4f7ac.firebaseapp.com",
+      databaseURL: "https://spinapp-4f7ac-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "spinapp-4f7ac",
+      storageBucket: "spinapp-4f7ac.appspot.com",
+      messagingSenderId: "468476604594",
+      appId: "1:468476604594:web:91555a106b2d34d02d19ab"
+    };
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const userRef = ref(database, 'config');
+    onValue(userRef, (snapshot) => {
+      const data = snapshot.val();
+      console.log("Data updated:", data);
+      populateTextarea(data.data);
+      $('#statusSpin').prop('checked', data.status);
+    });
+
+    $('#statusSpin').change(function () {
+      updateStatusInFirebase($('#statusSpin').prop('checked'))
+      if ($(this).is(':checked')) {
+        console.log('Toggle On');
+      } else {
+        console.log('Toggle Off');
+      }
+    });
+
+    $('#dataSpin').on('keyup', function () {
+      var text = $(this).val();
+      updateDataInFirebase(convertToArray(text));
+    });
+
+    function populateTextarea(arr) {
+      var text = arr.join('\n'); // Join array elements with new line separator
+      $('#dataSpin').val(text); // Set the textarea value
+    }
+
+    function convertToArray(text) {
+      var array = text.split('\n')
+        .map(item => item.trim())
+        .filter(item => item !== '');
+      return array;
+    }
+
+    function updateStatusInFirebase(status) {
+      const statusRef = ref(database, 'config/status');
+      set(statusRef, status).then(() => {
+        console.log("Status updated successfully.");
+      }).catch((error) => {
+        console.error("Error updating status:", error);
+      });
+    }
+
+    function updateDataInFirebase(dataArray) {
+      const dataRef = ref(database, 'config/data');
+      set(dataRef, dataArray).then(() => {
+        console.log("Data updated successfully.");
+      }).catch((error) => {
+        console.error("Error updating data:", error);
+      });
+    }
+
+  </script>
+  <script>
+
+  </script>
+</body>
+
+</html>
