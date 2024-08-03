@@ -834,13 +834,32 @@
                         
                         const totalEntries = entries.length;
                         const anglePerEntry = 2 * Math.PI / totalEntries;
+                        const variableX = 0.01 * 10 / totalEntries;
                         
                         indices.forEach(index => {
-                            const startAngle = index == 0 ? 0 : index * anglePerEntry - anglePerEntry / 2 + 0.01;
-                            const endAngle = index * anglePerEntry + anglePerEntry / 2 - 0.01;
-                            const ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
+                            const indexResult = []
+
+                            if (index == 0) {
+                                let startAngle = 2 * Math.PI - anglePerEntry / 2 + variableX;
+                                let endAngle = 2 * Math.PI;
+                                let ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
+
+                                indexResult.push({ name, startAngle, endAngle, ranAngle });
+
+                                startAngle = 0;
+                                endAngle = index * anglePerEntry + anglePerEntry / 2 - variableX;
+                                ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
+
+                                indexResult.push({ name, startAngle, endAngle, ranAngle });
+                            } else {
+                                const startAngle = index * anglePerEntry - anglePerEntry / 2 + variableX;
+                                const endAngle = index * anglePerEntry + anglePerEntry / 2 - variableX;
+                                const ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
+
+                                indexResult.push({ name, startAngle, endAngle, ranAngle });
+                            }
     
-                            resultName.push({ name, startAngle, endAngle, ranAngle });
+                            resultName.push(indexResult[Math.floor(Math.random() * indexResult.length)]);
                         })
 
                         const randomIndex = Math.floor(Math.random() * resultName.length);
