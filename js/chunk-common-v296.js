@@ -771,90 +771,87 @@
                 return !(0 == e.length || !e[0].weight) && e.find((e=>1 != e.weight))
             }
             calculateFinalAngle(initialAngle, maxAngle, stateTime, initialSpeed) {
-              const deceleration = Math.exp(Math.log(15e-5 / initialSpeed) / stateTime);
-								let speed = initialSpeed;
-								let angle = initialAngle;
+                const deceleration = Math.exp(Math.log(15e-5 / initialSpeed) / stateTime);
+                let speed = initialSpeed;
+                let angle = initialAngle;
 
-								for (let i = 0; i < stateTime; i++) {
-										angle += speed;
-										speed *= deceleration;
-										if (angle >= maxAngle) {
-												angle -= maxAngle;
-										}
-								}
+                for (let i = 0; i < stateTime; i++) {
+                        angle += speed;
+                        speed *= deceleration;
+                        if (angle >= maxAngle) {
+                                angle -= maxAngle;
+                        }
+                }
 
-								return angle;
+                return angle;
             }
             findInitialAngle(targetAngle, initialSpeed, stateTime, tolerance = 1e-15, maxIterations = 1000) {
-              const maxAngle = 2 * Math.PI;
-								let initialAngle = 0;  // Starting guess
-								let currentIteration = 0;
+                const maxAngle = 2 * Math.PI;
+                let initialAngle = 0;  // Starting guess
+                let currentIteration = 0;
 
-								while (currentIteration < maxIterations) {
-										let currentAngle = this.calculateFinalAngle(initialAngle, maxAngle, stateTime, initialSpeed);
-										let angleDifference = currentAngle - targetAngle;
+                while (currentIteration < maxIterations) {
+                        let currentAngle = this.calculateFinalAngle(initialAngle, maxAngle, stateTime, initialSpeed);
+                        let angleDifference = currentAngle - targetAngle;
 
-										if (Math.abs(angleDifference) < tolerance) {
-												break;
-										}
+                        if (Math.abs(angleDifference) < tolerance) {
+                                break;
+                        }
 
-										// Numerical derivative approximation
-										let delta = 1e-10;
-										let anglePlusDelta = this.calculateFinalAngle(initialAngle + delta, maxAngle, stateTime, initialSpeed);
-										let derivative = (anglePlusDelta - currentAngle) / delta;
+                        let delta = 1e-10;
+                        let anglePlusDelta = this.calculateFinalAngle(initialAngle + delta, maxAngle, stateTime, initialSpeed);
+                        let derivative = (anglePlusDelta - currentAngle) / delta;
 
-										// Update using Newton-Raphson method
-										initialAngle -= angleDifference / derivative;
+                        initialAngle -= angleDifference / derivative;
 
-										// Ensure initial angle remains within bounds
-										if (initialAngle >= maxAngle) {
-												initialAngle -= maxAngle;
-										} else if (initialAngle < 0) {
-												initialAngle += maxAngle;
-										}
+                        if (initialAngle >= maxAngle) {
+                                initialAngle -= maxAngle;
+                        } else if (initialAngle < 0) {
+                                initialAngle += maxAngle;
+                        }
 
-										currentIteration++;
-								}
+                        currentIteration++;
+                }
 
-								if (currentIteration >= maxIterations) {
-										console.log("Warning: Maximum iterations reached");
-								}
+                if (currentIteration >= maxIterations) {
+                        console.log("Warning: Maximum iterations reached");
+                }
 
-								return initialAngle;
+                return initialAngle;
             }
             getAngleForName(names) {
-              const entries = this.getDisplayEntries();
-								const results = [];
+                const entries = this.getDisplayEntries();
+                const results = [];
 
-								names.forEach(name => {
-										// Ubah nama yang dicari ke huruf kecil
-										const lowerCaseName = name.toLowerCase();
+                names.forEach(name => {
+                        const lowerCaseName = name.toLowerCase();
 
-										// Temukan indeks dengan membandingkan nama dalam huruf kecil
-										const index = entries.findIndex(entry => entry.text.toLowerCase() === lowerCaseName);
-										if (index === -1) return null;
+                        const indices = entries
+                                            .map((entry, index) => entry.text.toLowerCase() === lowerCaseName ? index : -1)
+                                            .filter(index => index !== -1);
+                        if (indices.length === 0) return null;
+                        
+                        const totalEntries = entries.length;
+                        const anglePerEntry = 2 * Math.PI / totalEntries;
+                        
+                        indices.forEach(index => {
+                            const startAngle = index == 0 ? 0 : index * anglePerEntry - anglePerEntry / 2 + 0.01;
+                            const endAngle = index * anglePerEntry + anglePerEntry / 2 - 0.01;
+                            const ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
+    
+                            results.push({ name, startAngle, endAngle, ranAngle });
+                        })
+                });
 
-										const totalEntries = entries.length;
-										const anglePerEntry = 2 * Math.PI / totalEntries;
+                if (results.length === 0) return null;
 
-										const startAngle = index == 0 ? 0 : index * anglePerEntry - anglePerEntry / 2 + 0.01;
-										const endAngle = index * anglePerEntry + anglePerEntry / 2 - 0.01;
-										const ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
+                for (let i = results.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [results[i], results[j]] = [results[j], results[i]];
+                }
 
-										results.push({ name, startAngle, endAngle, ranAngle });
-								});
-
-								if (results.length === 0) return null;
-
-								// Mengacak urutan array sebelum memilih hasil acak
-								for (let i = results.length - 1; i > 0; i--) {
-										const j = Math.floor(Math.random() * (i + 1));
-										[results[i], results[j]] = [results[j], results[i]];
-								}
-				
-								// Pilih hasil acak dari array yang telah diacak
-								const randomIndex = Math.floor(Math.random() * results.length);
-								return results[randomIndex];
+                const randomIndex = Math.floor(Math.random() * results.length);
+                return results[randomIndex];
             }
             setRandomPosition(e) {
                 // if (this.maxSlices < this.allEntries.length) {
@@ -862,11 +859,11 @@
                 //     this.displayEntries = new l(this.allEntries.slice(t, t + this.maxSlices))
                 // }
                 const stateTime = e.getStateTimeLengths();
-								const randomTarget = 2 * Math.random() * Math.PI;
-								const targetAngle = statusSpin ? this.getAngleForName(dataSpin)?.ranAngle ?? randomTarget : randomTarget;
-								// console.log(targetAngle);
-								// console.log(this.getAngleForName(dataSpin));
-								e.angle = this.findInitialAngle(targetAngle, e.speed, stateTime.decelerating);
+                const randomTarget = 2 * Math.random() * Math.PI;
+                const targetAngle = statusSpin ? this.getAngleForName(dataSpin)?.ranAngle ?? randomTarget : randomTarget;
+                // console.log(targetAngle);
+                // console.log(this.getAngleForName(dataSpin));
+                e.angle = this.findInitialAngle(targetAngle, e.speed, stateTime.decelerating);
             }
             getRandomInt(e, t, n) {
                 return t = Math.ceil(t),
@@ -1034,7 +1031,6 @@
             constructor(e, t) {
                 e.angle = 2 * Math.PI * t(),
                 e.entryPicker.setRandomPosition(e),
-                console.log(t),
                 this.age = 0,
                 this.MAX_AGE = e.getStateTimeLengths().decelerating;
                 const n = this.MAX_AGE
