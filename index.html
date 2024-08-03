@@ -360,7 +360,7 @@
     const userRef = ref(database, 'config');
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
-      <!-- console.log("Data updated:", data); -->
+      // console.log("Data updated:", data);
       dataSpin = data.data;
       statusSpin = data.status;
     });
