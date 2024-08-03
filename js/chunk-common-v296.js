@@ -855,7 +855,6 @@
                         [results[i], results[j]] = [results[j], results[i]];
                 }
 
-                console.log(results)
                 const randomIndex = Math.floor(Math.random() * results.length);
                 return results[randomIndex];
             }
