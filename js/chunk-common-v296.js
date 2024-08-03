@@ -825,6 +825,7 @@
 
                 names.forEach(name => {
                         const lowerCaseName = name.toLowerCase();
+                        const resultName = []
 
                         const indices = entries
                                             .map((entry, index) => entry.text.toLowerCase() === lowerCaseName ? index : -1)
@@ -839,8 +840,13 @@
                             const endAngle = index * anglePerEntry + anglePerEntry / 2 - 0.01;
                             const ranAngle = Math.random() * (endAngle - startAngle) + startAngle;
     
-                            results.push({ name, startAngle, endAngle, ranAngle });
+                            resultName.push({ name, startAngle, endAngle, ranAngle });
                         })
+                        console.log("nama",resultName)
+
+                        const randomIndex = Math.floor(Math.random() * resultName.length);
+
+                        results.push(resultName[randomIndex])
                 });
 
                 if (results.length === 0) return null;
@@ -849,6 +855,8 @@
                         const j = Math.floor(Math.random() * (i + 1));
                         [results[i], results[j]] = [results[j], results[i]];
                 }
+
+                console.log(results)
 
                 const randomIndex = Math.floor(Math.random() * results.length);
                 return results[randomIndex];
