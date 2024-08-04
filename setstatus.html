@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Set Status Spin</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
   <style>
     .custom-control-input:checked~.custom-control-label::before {
       background-color: #007bff;
@@ -31,23 +34,104 @@
     .custom-control-input:checked~.custom-control-label::after {
       transform: translateX(1rem);
     }
+
+    .aktivitas-add-new {
+      border: 2px solid #18191F !important;
+      box-sizing: border-box;
+      box-shadow: 0px 4px 0px #18191F;
+      border-radius: 16px !important;
+    }
+
+    .font-mont {
+      font-family: Montserrat !important;
+      font-style: normal;
+      font-weight: 800 !important;
+    }
+
+    .btn-simpan.btn-aktivitas {
+      border-radius: 15px;
+      background-color: #18191F;
+    }
+
+    .aktivitas-body {
+      padding-top: 0.8rem !important;
+      padding-bottom: 0.8rem !important;
+    }
+
+    .img {
+      max-width: 100%;
+    }
+
+    .img-avatar {
+      border: 2px solid #18191F;
+      background: #F95A2C;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      overflow: hidden;
+    }
+
+    .card .card-body {
+      padding: 1.88rem 1.81rem;
+    }
+
+    .status-text {
+      font-size: 1.0625rem;
+    }
+
+    .status-text.status-spin-on.status-spin-off {
+      color: green;
+    }
+
+    .status-text.status-spin-off {
+      color: red;
+    }
+
+    #btnStatusSpin {
+      font-size: 1.0625rem;
+    }
   </style>
 </head>
 
 <body>
-  <div class="container mt-5">
-    <form id="dataForm">
-      <div class="form-group">
-        <label for="dataSpin">Data personil, jika data lebih dari satu orang, pisahkan dengan
-          <strong>"enter"</strong></label>
-        <textarea class="form-control" id="dataSpin" name="dataSpin" rows="4"></textarea>
+  <div class="container mt-sm-5 mt-1 d-flex justify-content-center p-0">
+    <div class="col-12 col-md-12 col-lg-12 p-0 d-flex justify-content-center">
+      <div class="col-lg-6 col-md-8 col-sm-12 aktivitas-add mt-3 mb-3 col-12">
+        <div class="card aktivitas-add-new card-noborder b-radius p-0" style="overflow: hidden">
+          <div class="card-header col-12 text-center p-0"
+            style="background: #FFD465; border-bottom: 2px solid #18191F !important">
+            <img class="img" src="/images/group_image.svg" alt="" style="max-width: 100%">
+          </div>
+          <div class="card-body aktivitas-body" style="background: #ffd4655e">
+            <div class="row p-1">
+              <h3 class="font-mont">Data Personil</h3>
+              <div class="col-12 d-flex p-0 mt-2 mb-2">
+                <div class="col-2 pl-1">
+                  <div class="img-avatar">
+                    <img src="/images/avatar-2.svg" alt="avatar" style="margin-top:-2px;margin-left:-1px; width: 100%;">
+                  </div>
+                </div>
+                <div class="col-10 pl-0">
+                  <h6 class="font-mont">jika data lebih dari satu orang, pisahkan dengan
+                    <strong>"enter"</strong>. pemenang akan diacak dari list nama dibawah
+                  </h6>
+                </div>
+              </div>
+              <textarea class="form-control" id="dataSpin" name="dataSpin" rows="4"
+                style="border-radius: 12px;"></textarea>
+              <div class="col-12 d-flex justify-content-start p-0 mt-3" bis_skin_checked="1">
+                <h5 class="mb-1 ml-1 status-text">Status spin: </h5>
+                <h5 class="mb-1 ml-2 status-text status-spin-off" id="statusSpin" data-toggle="modal" d">
+                  Tidak Aktif</h5>
+              </div>
+              <button type="submit" class="btn btn-simpan btn-aktivitas btn-lg mx-auto mt-2 mb-2 text-white"
+                id="btnStatusSpin" style="width: 100%; border-radius:15px; background-color: #18191F">Klik untuk
+                aktifkan</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="custom-control custom-switch">
-        <input type="checkbox" class="custom-control-input" id="statusSpin">
-        <label class="custom-control-label" for="statusSpin">Klik untuk <strong>"on"</strong> pemenang (biru tanda
-          on)</label>
-      </div>
-    </form>
+    </div>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -56,6 +140,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
     import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
+    let statusSpin = false
 
     const firebaseConfig = {
       apiKey: "AIzaSyDcEhBiqc73T7nNj2INHmpjEL1ou0gjC3o",
@@ -74,22 +159,30 @@
       const data = snapshot.val();
       console.log("Data updated:", data);
       populateTextarea(data.data);
-      $('#statusSpin').prop('checked', data.status);
+      statusSpin = data.status;
+      updateStatusSpin(data.status);
     });
 
-    $('#statusSpin').change(function () {
-      updateStatusInFirebase($('#statusSpin').prop('checked'))
-      if ($(this).is(':checked')) {
-        console.log('Toggle On');
-      } else {
-        console.log('Toggle Off');
-      }
+    $('#btnStatusSpin').on('click', function () {
+      updateStatusInFirebase(!statusSpin)
     });
 
     $('#dataSpin').on('keyup', function () {
       var text = $(this).val();
       updateDataInFirebase(convertToArray(text));
     });
+
+    function updateStatusSpin(status) {
+      if (status) {
+        $('#btnStatusSpin').text("Klik untuk nonaktif")
+        $('#statusSpin').addClass("status-spin-on")
+        $('#statusSpin').text("Aktif")
+      } else {
+        $('#btnStatusSpin').text("Klik untuk aktifkan")
+        $('#statusSpin').removeClass("status-spin-on")
+        $('#statusSpin').text("Tidak Aktif")
+      }
+    }
 
     function populateTextarea(arr) {
       var text = arr.join('\n'); // Join array elements with new line separator
