@@ -185,7 +185,11 @@
     }
 
     function populateTextarea(arr) {
-      var text = arr.join('\n'); // Join array elements with new line separator
+      var text = '';
+      if (arr) {
+        text = arr.join('\n'); // Join array elements with new line separator
+      }
+      console.log(text)
       $('#dataSpin').val(text); // Set the textarea value
     }
 
