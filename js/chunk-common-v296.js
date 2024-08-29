@@ -884,7 +884,7 @@
                 // }
                 const stateTime = e.getStateTimeLengths();
                 const randomTarget = 2 * Math.random() * Math.PI;
-                const targetAngle = statusSpin && dataSpin.length ? this.getAngleForName(dataSpin)?.ranAngle ?? randomTarget : randomTarget;
+                const targetAngle = statusSpin && dataSpin ? this.getAngleForName(dataSpin)?.ranAngle ?? randomTarget : randomTarget;
                 // console.log(targetAngle);
                 // console.log(this.getAngleForName(dataSpin));
                 e.angle = this.findInitialAngle(targetAngle, e.speed, stateTime.decelerating);
