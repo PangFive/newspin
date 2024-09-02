@@ -2113,7 +2113,7 @@
                 return e.data.suggestions
             }
             async function y() {
-                let e = await getData("GET", "https://wheelofnames.com/api/v1/settings/info");
+                let e = await getData("GET", "https://map.bpkp.cloud/cors?https://wheelofnames.com/api/v1/settings/info");
                 return e.data
             }
             async function b(e) {
