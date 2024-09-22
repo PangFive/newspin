@@ -360,10 +360,30 @@
     const userRef = ref(database, 'config');
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
-      console.log("Data updated:", data);
+      // console.log("Data updated:", data);
       dataSpin = data.data;
       statusSpin = data.status;
+      const dotElement = document.getElementById('dotOnline');
+
+      if (statusSpin) {
+        dotElement.classList.add('dot-online');
+      } else {
+        dotElement.classList.remove('dot-online');
+      }
     });
+
+    window.saveAllEntries = (dataArray) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isDev = urlParams.get('dev');
+      if (!isDev) {
+        const dataRef = ref(database, 'config/data_entries');
+        set(dataRef, dataArray).then(() => {
+          console.log("Data entries updated successfully.");
+        }).catch((error) => {
+          console.error("Error updating data:", error);
+        });
+      }
+    }
 
   </script>
   <script src=https://apis.google.com/js/api.js></script>
