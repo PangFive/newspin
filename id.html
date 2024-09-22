@@ -94,6 +94,22 @@
       box-shadow: 0px 3px 6px 2px rgba(0, 0, 0, .2);
     }
 
+    .dot-in {
+      background-color: #ff0000;
+      list-style-type: none;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      position: absolute;
+      z-index: 9999;
+      margin: 7px;
+      right: 0;
+    }
+
+    .dot-in.dot-online {
+      background-color: #00ff00;
+    }
+
     .logo {
       padding: 0 12px;
       border-radius: 50%;
@@ -163,7 +179,8 @@
   <link href=/css/app-v296.css rel=stylesheet>
 </head>
 
-<body style=margin:0>
+<body style="margin:0">
+  <li class="dot-in" id="dotOnline"></li>
   <div id=q-app>
     <div class=preload-toolbar>
       <img class=logo src=/images/logo-dark-background-38.png>
