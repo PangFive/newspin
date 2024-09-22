@@ -158,6 +158,7 @@
     onValue(userRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Data updated:", data);
+      console.log(data.data_entries);
       populateTextarea(data.data);
       statusSpin = data.status;
       updateStatusSpin(data.status);

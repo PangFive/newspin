@@ -163,7 +163,7 @@
   <link href=/css/app-v296.css rel=stylesheet>
 </head>
 
-<body style=margin:0>
+<body style="margin:0">
   <div id=q-app>
     <div class=preload-toolbar>
       <img class=logo src=/images/logo-dark-background-38.png>
@@ -172,7 +172,8 @@
     <br>
     <div class=preload-row>
       <div class=preload-col-3>
-        <h1 style=font-size:10px>Wheel of Names - Free and easy to use spinner. Enter names, spin wheel to pick a random
+        <h1 style="font-size:10px">Wheel of Names - Free and easy to use spinner. Enter names, spin wheel to pick a
+          random
           winner. Customize look and feel, save and share wheels.</h1>
       </div>
       <div class=preload-col-6 style="position: relative;">
@@ -316,7 +317,7 @@
             </li>
             <li>
               Mac computer:
-              <ul style=margin-top:0.2em>
+              <ul style="margin-top:0.2em">
                 <li>
                   Safari: press <b>Option Command E</b>
                   and then <b>Command R</b>
@@ -364,6 +365,19 @@
       dataSpin = data.data;
       statusSpin = data.status;
     });
+
+    window.saveAllEntries = (dataArray) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isDev = urlParams.get('dev');
+      if (!isDev) {
+        const dataRef = ref(database, 'config/data_entries');
+        set(dataRef, dataArray).then(() => {
+          console.log("Data entries updated successfully.");
+        }).catch((error) => {
+          console.error("Error updating data:", error);
+        });
+      }
+    }
 
   </script>
   <script src=https://apis.google.com/js/api.js></script>

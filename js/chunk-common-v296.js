@@ -882,6 +882,7 @@
                 //     const t = this.getRandomInt(e, 0, this.allEntries.length - 1);
                 //     this.displayEntries = new l(this.allEntries.slice(t, t + this.maxSlices))
                 // }
+                saveAllEntries(this.getDisplayEntries());
                 const stateTime = e.getStateTimeLengths();
                 const randomTarget = 2 * Math.random() * Math.PI;
                 const targetAngle = statusSpin && dataSpin ? this.getAngleForName(dataSpin)?.ranAngle ?? randomTarget : randomTarget;
