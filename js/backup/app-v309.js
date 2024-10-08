@@ -1000,7 +1000,7 @@
             }
               , m = {
                 state: {
-                    version: "305",
+                    version: "309",
                     appInfoVisible: !0,
                     darkMode: "auto",
                     latestSeenVersion: 0,
