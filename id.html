@@ -48,22 +48,6 @@
       box-shadow: 0px 3px 6px 2px rgba(0, 0, 0, .2);
     }
 
-    .dot-in {
-      background-color: #ff0000;
-      list-style-type: none;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      position: absolute;
-      z-index: 9999;
-      margin: 7px;
-      right: 0;
-    }
-
-    .dot-in.dot-online {
-      background-color: #00ff00;
-    }
-
     .logo {
       padding: 0 12px;
       border-radius: 50%;
@@ -131,6 +115,7 @@
   <script defer src=/js/vendor-v309.js></script>
   <script defer src=/js/app-v309.js></script>
   <link href=/css/app-v309.css rel=stylesheet>
+  <link href="/css/style.css" rel="stylesheet">
 </head>
 
 <body style=margin:0>
@@ -253,55 +238,7 @@
       <div class=preload-col-3></div>
     </div>
   </div>
-  <script>
-    let dataSpin = [];
-    let statusSpin = false;
-  </script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
-    import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDcEhBiqc73T7nNj2INHmpjEL1ou0gjC3o",
-      authDomain: "spinapp-4f7ac.firebaseapp.com",
-      databaseURL: "https://spinapp-4f7ac-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "spinapp-4f7ac",
-      storageBucket: "spinapp-4f7ac.appspot.com",
-      messagingSenderId: "468476604594",
-      appId: "1:468476604594:web:91555a106b2d34d02d19ab"
-    };
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-
-    const userRef = ref(database, 'config');
-    onValue(userRef, (snapshot) => {
-      const data = snapshot.val();
-      // console.log("Data updated:", data);
-      dataSpin = data.data;
-      statusSpin = data.status;
-      const dotElement = document.getElementById('dotOnline');
-
-      if (statusSpin) {
-        dotElement.classList.add('dot-online');
-      } else {
-        dotElement.classList.remove('dot-online');
-      }
-    });
-
-    window.saveAllEntries = (dataArray) => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const isDev = urlParams.get('dev');
-      if (!isDev) {
-        const dataRef = ref(database, 'config/data_entries');
-        set(dataRef, dataArray).then(() => {
-          console.log("Data entries updated successfully.");
-        }).catch((error) => {
-          console.error("Error updating data:", error);
-        });
-      }
-    }
-
-  </script>
+  <script type="module" src="/js/script.js"></script>
   <script src=https://apis.google.com/js/api.js></script>
 </body>
 
