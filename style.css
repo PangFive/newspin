@@ -1,0 +1,15 @@
+.dot-in {
+  background-color: #ff0000;
+  list-style-type: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 9999;
+  margin: 7px;
+  right: 0;
+}
+
+.dot-in.dot-online {
+  background-color: #00ff00;
+}
