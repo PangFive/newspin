@@ -2,7 +2,7 @@ import {L as s, ai as a, H as t, aj as i} from "./index-v344.js";
 const n = s("preferences", {
     state: () => ({
         // edit
-        version: 344,
+        version: 345,
         appInfoVisible: !0,
         darkMode: "auto",
         latestSeenVersion: 0,
