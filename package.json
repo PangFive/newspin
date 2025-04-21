@@ -1,0 +1,16 @@
+{
+  "name": "newspin",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "serve-handler": "^6.1.6",
+    "nodemon": "^2.0.19"
+  }
+}
