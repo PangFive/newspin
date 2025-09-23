@@ -12914,7 +12914,8 @@ function SN() {
     return window.self !== window.top
 }
 function xc(e) {
-    return location.host.startsWith("localhost") ? `http://localhost:8081/${e}` : `/${e}`
+    // edit
+    return location.host.startsWith("localhost") ? `/cors?url=https://wheelofnames.com/${e}` : `/cors?url=https://wheelofnames.com/${e}`
 }
 function CN(e, t) {
     return Object.entries(e).sort( (r, s) => r[0] === "sounds.Sound effects" ? -1 : s[0] === "sounds.Sound effects" ? 1 : r[0] === "sounds.Winter holidays" && t > 9 ? -1 : s[0] === "sounds.Winter holidays" && t > 9 ? 1 : 0).reduce( (r, s) => (r[s[0]] = s[1],
@@ -13055,23 +13056,7 @@ async function PN() {
 }
 async function AN() {
     // edit
-    // return (await pe("GET", "api/v2/client-settings")).data
-    return {
-        "data": {
-            "readOnlyMode": false,
-            "advertiserWeights": {
-                "freestar": 1
-            },
-            "carouselSlides": [
-                {
-                    "html": "<div class=\"text-center\"><a href=\"https://discord.gg/bKCTfCZwnP\">Join our Discord server</a> to get support or to give us your feedback!</div>"
-                }
-            ],
-            "spinsPerSecond": 46.606667943805874,
-            "hoursSpunPerSecond": 0.129462966510572,
-            "commitHash": "7f69"
-        }
-    }
+    return (await ze("GET", "api/v2/client-settings")).data
 }
 async function YS(e) {
     return (await ze("POST", "api/v2/api-keys", e)).data.apiKey
